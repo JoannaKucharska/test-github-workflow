@@ -1,6 +1,9 @@
-name: Display Python Version
+name: Display Python Version and Test with Pylint
 
-on: push
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   display-python-version:
@@ -16,3 +19,24 @@ jobs:
         echo "Python version:"
         python --version
         echo "Finished with success."
+
+  test-with-pylint:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: 3.x
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pylint
+        pip install Flask
+
+    - name: Run Pylint
+      run: |
+        pylint app.py
